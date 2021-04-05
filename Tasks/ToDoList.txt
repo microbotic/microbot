@@ -1,0 +1,15 @@
+Develop a first requirements specification based on the Systems Engineering lecture
+
+Deadline: April 15
+
+Apply the steps from the lecture
+- Requirement Elicitation
+- Requirement Analysis
+- Requirement Specification
+- Requirement Validation
+
+Outcome area:
+
+**SysML requirements diagram and appropriate 
+
+**UML Diagrams if required for the specific steps
