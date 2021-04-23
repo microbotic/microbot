@@ -1,15 +1,6 @@
-Develop a first requirements specification based on the Systems Engineering lecture
-
-Deadline: April 15
-
-Apply the steps from the lecture
-- Requirement Elicitation
-- Requirement Analysis
-- Requirement Specification
-- Requirement Validation
+1. Brain storm on system and subsystem (what do we need, e.g. gps, wheels etc)
+2. Read chapter 4 of the book to get an idea on what is the best architecture model
+3. update the SysML models that are not correrct(Activity diagram, sequence diagram, requiremnts diagram, state machine diagram, block diagram)
 
-Outcome area:
-
-**SysML requirements diagram and appropriate 
-
-**UML Diagrams if required for the specific steps
+For the next meeting is required to bring ideas on the system and the subsystems
+IMPORTANT READ THE BOOK
