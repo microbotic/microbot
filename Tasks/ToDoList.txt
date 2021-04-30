@@ -1,8 +1,5 @@
-1. Brain storm on system and subsystem (what do we need, e.g. gps, wheels etc)
-2. Read chapter 4 of the book to get an idea on what is the best architecture model
-3. update the SysML models that are not correrct(Activity diagram, sequence diagram, requiremnts diagram, state machine diagram, block diagram)
+According the meeting of today with Professor Henkler the next have to be done:
 
-For the next meeting is required to bring ideas on the system and the subsystems
-IMPORTANT READ THE BOOK
-
-NEXT MEETING ON MONDAY APRIL 26 AT 16:00
+1. Re-organize the folders on GitHub
+2. Create some subfolders, for example Usecase. scenarios, context, requirements etc.
+3. Review all the diagrams that we did, and change them in case we followed the book layout instead SysML.
