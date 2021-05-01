@@ -1,8 +1,0 @@
-1. Brain storm on system and subsystem (what do we need, e.g. gps, wheels etc)
-2. Read chapter 4 of the book to get an idea on what is the best architecture model
-3. update the SysML models that are not correrct(Activity diagram, sequence diagram, requiremnts diagram, state machine diagram, block diagram)
-
-For the next meeting is required to bring ideas on the system and the subsystems
-IMPORTANT READ THE BOOK
-
-NEXT MEETING ON MONDAY APRIL 26 AT 16:00
