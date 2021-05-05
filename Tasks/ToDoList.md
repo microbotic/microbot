@@ -1,5 +1,11 @@
-# Please complete the next tasks before wednesday May 5 
+# Please complete the next tasks before thursday May 6
 
-## Upgrade the diagrams regarding the feedback from Professor.
-## Double check if your respective diagrmas in image are in PNG format
-## Upload in its respective folder the VPD files for your diagrams
+## Nur: Use case diagram in VPD
+## Charles: sequence diagram in VPD
+
+# PRESENTATION FOR MAY 7TH:
+
+## NUR: Check the raw sketch
+
+
+
