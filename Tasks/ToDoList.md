@@ -1,11 +1,10 @@
-# Please complete the next tasks before thursday May 6
+# Please complete the next tasks before thursday May 14
 
-## Nur: Use case diagram in VPD
-## Charles: sequence diagram in VPD
+## Complete the presentation slides
 
-# PRESENTATION FOR MAY 7TH:
+# NEXT MEETING:
 
-## NUR: Check the raw sketch
+## May 14 9:00 (one hour before the class)
 
 
 
