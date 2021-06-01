@@ -102,43 +102,58 @@ int move(char *world) {
     
     //watch right
     isFreeToMove[4] = (world[(robot_index_y)*width + (robot_index_x + 1)] == '#' ? 0 : 1);
+
+    printf("\n");
+    for(int i = 0; i < 8; i++)
+        printf(" %d ", isFreeToMove[i]);
+
+    printf("\n");
     
     //Check the shortest distance between X and Y
-
+    //If the robot is in the same column with the target
     if(xDistance == 0)
     {
         if(yDistance > 0)
         {
-            //try to move north
-            if(isFreeToMove[1])
+            //try to move south
+            if(isFreeToMove[6] == 1)
             {
                 return South;
             }
         }
         else if (yDistance < 0)
         {
-            if(isFreeToMove[6])
+            //try to move north
+            if(isFreeToMove[1])
             {
                 return North;
             }
         }
     }
+
+    //If the robot is in the same row with the target
     else if (yDistance == 0)
     {
         if(xDistance > 0)
         {
-            if(isFreeToMove[4])
+            //try to move East
+            if(isFreeToMove[4] == 1)
+            {
                 return East;
+            }
         }
         else if (xDistance < 0)
         {
-            if(isFreeToMove[3])
+            //try to move West
+            if(isFreeToMove[3] == 1)
+            {
                 return West;
+            }
         }
     }
-    else if(abs(xDistance) < abs(yDistance))
+
+    /*else if(abs(xDistance) < abs(yDistance))
     {
-        
         if(xDistance > 0)
         {
             //robot will try to move East
@@ -165,10 +180,7 @@ int move(char *world) {
             //robot will try to move North
             return North;
         }
-    }
-
-    
-    
+    }*/
     return 1; // REPLACE THE RETURN VALUE WITH YOUR CALCULATED RETURN VALUE
 }
 
@@ -225,10 +237,10 @@ int main() {
     char world[200] = {
         '#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','\n',
         '#','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','O','T','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
+        '#','O','O','O','O','O','O','O','O','O','O','R','O','O','O','O','O','O','O','#','\n',
+        '#','O','O','O','O','O','O','O','O','O','O','#','O','O','O','O','O','O','O','#','\n',
         '#','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','O','O','O','O','O','O','O','O','O','O','O','O','O','R','O','O','O','O','#','\n',
+        '#','O','O','O','O','O','O','O','O','O','O','T','O','O','O','O','O','O','O','#','\n',
         '#','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
         '#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','\n',
     };
