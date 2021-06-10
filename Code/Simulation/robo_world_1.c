@@ -83,8 +83,6 @@ int move(char *world) {
         return East;
     
 
-    int moveWest;
-
     int steps[200];
 
     //analize surrounding
