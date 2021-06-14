@@ -8,6 +8,7 @@
 #define West 4
 #define East 2
 #define Toggle 5
+#define MaxSteps 201
 
 // Function declaration
 //int minSteps(char *world, int initial_position_x, int initial_position_y, int width);

@@ -67,7 +67,7 @@ int minSteps(char *world, int initial_position, int width)
 }
 
 int move(char *world) {
-    int robot_index, target_index, robot_index_x, robot_index_y, target_index_x, target_index_y, width;
+    int robot_index, target_index, width;
     
     //int nextMove = 1;
     for (int i = 0; i < 200; ++i)
@@ -144,58 +144,38 @@ int move(char *world) {
     //NORTH
     if(bestRoute == North)
     {
-        if ((world[robot_index - width] == '~') && (current_mode == 0))
+        if (((world[robot_index - width] == '~') && (current_mode == 0)) || ((world[robot_index - width] == 'O') && (current_mode == 1)))
         {
-            current_mode = 1;
+            current_mode = (current_mode == 0 ? 1 : 0);
             return Toggle;
         }
-        if ((world[robot_index - width] == 'O') && (current_mode == 1))
-        {
-            current_mode = 0;
-            return Toggle;
-        }    
     }
     //SOUTH
     if(bestRoute == South)
     {
-        if ((world[robot_index + width] == '~') && (current_mode == 0))
+        if (((world[robot_index + width] == '~') && (current_mode == 0)) || ((world[robot_index + width] == 'O') && (current_mode == 1)))
         {
-            current_mode = 1;
-            return Toggle;
+            current_mode = (current_mode == 0 ? 1 : 0);
+            return Toggle; 
         }
-        if ((world[robot_index + width] == 'O') && (current_mode == 1))
-        {
-            current_mode = 0;
-            return Toggle;
-        }    
     }
     //WEST
     if(bestRoute == West)
     {
-        if ((world[robot_index - 1] == '~') && (current_mode == 0))
+        if (((world[robot_index - 1] == '~') && (current_mode == 0)) || ((world[robot_index - 1] == 'O') && (current_mode == 1)))
         {
-            current_mode = 1;
+            current_mode = (current_mode == 0 ? 1 : 0);
             return Toggle;
-        }
-        if ((world[robot_index - 1] == 'O') && (current_mode == 1))
-        {
-            current_mode = 0;
-            return Toggle;
-        }    
+        } 
     }
     //EAST
     if(bestRoute == East)
     {
-        if ((world[robot_index + 1] == '~') && (current_mode == 0))
+        if (((world[robot_index + 1] == '~') && (current_mode == 0)) || ((world[robot_index + 1] == 'O') && (current_mode == 1)))
         {
-            current_mode = 1;
+            current_mode = (current_mode == 0 ? 1 : 0);
             return Toggle;
-        }
-        if ((world[robot_index + 1] == 'O') && (current_mode == 1))
-        {
-            current_mode = 0;
-            return Toggle;
-        }    
+        } 
     }
     return bestRoute; // REPLACE THE RETURN VALUE WITH YOUR CALCULATED RETURN VALUE
 }
