@@ -129,7 +129,7 @@ int move(char *world) {
     int ifUp = 201;
     int ifDown = 201;
     int ifLeft = 201; 
-    int ifRight = 201;;
+    int ifRight = 201;
     
     //IF UP IS FREE -------------------------------------------------------
 

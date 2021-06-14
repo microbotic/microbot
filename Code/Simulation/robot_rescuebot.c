@@ -106,29 +106,12 @@ int move(char *world) {
         return East;
   
     //analize surrounding
-    int isFreeToMove[4];
-    int upIsFree, downIsFree, leftIsFree, rightIsFree;
-    upIsFree = (world[robot_index - width] == '#' ? 0 : 1);
-    downIsFree = (world[robot_index + width] == '#' ? 0 : 1);
-    leftIsFree = (world[robot_index - 1] == '#' ? 0 : 1);
-    rightIsFree = (world[robot_index + 1] == '#' ? 0 : 1);
-
-    int ifUp = 201;
-    int ifDown = 201;
-    int ifLeft = 201; 
-    int ifRight = 201;;
+   
+    int ifUp = (world[robot_index - width] == '#' ? 500 : minSteps(world, robot_index - width, width));
+    int ifDown = (world[robot_index + width] == '#' ? 500 : minSteps(world, robot_index + width, width));
+    int ifLeft = (world[robot_index - 1] == '#' ? 500 : minSteps(world, robot_index - 1, width)); 
+    int ifRight = (world[robot_index + 1] == '#' ? 500 : minSteps(world, robot_index + 1, width));
     
-    //IF UP IS FREE -------------------------------------------------------
-
-    if(upIsFree == 1)
-        ifUp = minSteps(world, robot_index - width, width);
-    if(downIsFree == 1)
-        ifDown = minSteps(world, robot_index + width, width);
-    if(leftIsFree)
-        ifLeft = minSteps(world, robot_index - 1, width);
-    if(rightIsFree)
-        ifRight = minSteps(world, robot_index + 1, width);
-      
     int bestRoute = 0;
     if((ifUp <= ifDown) && (ifUp <= ifLeft) && (ifUp <= ifRight))
         bestRoute = North;
@@ -138,7 +121,6 @@ int move(char *world) {
         bestRoute = West;
     else
         bestRoute = East;
-
 
     //decide if robot has to toggle
     //NORTH
