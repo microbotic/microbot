@@ -6,7 +6,7 @@
 
 int current_mode = 0; 
 
-int minSteps(char *world, int initial_position, int width)
+int minSteps(char *world, int initial_position_x, int initial_position_y, int width)
 {
     int newSteps;
     int newToggle = 0;
@@ -17,7 +17,7 @@ int minSteps(char *world, int initial_position, int width)
     {
         steps[i] = 0;
     }
-    steps[initial_position] = 1;  //mark the initial step as 1 (one steps total from the robot to the target)
+    steps[initial_position_y * width + initial_position_x] = 1;  //mark the initial step as 1 (one steps total from the robot to the target)
     newSteps = 1;
     int targetFound = 0;
     while((newSteps != 0) && (targetFound == 0))
@@ -25,35 +25,37 @@ int minSteps(char *world, int initial_position, int width)
         newSteps = 0;   //initialize new steps (if there are no new steps no makes sence to try again)
         for(int i = 0; i < 200; i++)
         {
-            int actualpos = 0;
+            int actualx = 0;
+            int acutaly = 0;
             if(steps[i] == totalSteps)
             {
-                actualpos = i;
-                if((world[actualpos - width] == 'T') || (world[actualpos + width] == 'T') ||
-                    (world[actualpos + 1] == 'T') || (world[actualpos - 1] == 'T'))
+                acutaly = i / width;
+                actualx = i % width;
+                if((world[(acutaly - 1) * width + actualx] == 'T') || (world[(acutaly + 1) * width + actualx] == 'T') ||
+                    (world[acutaly * width + actualx + 1] == 'T') || (world[acutaly * width + actualx - 1] == 'T'))
                 {
                     targetFound = 1;
                     break;
                 }
                 //count steps to go to different positions
-                if((world[actualpos - width] != '#') && (steps[actualpos - width] == 0))
+                if((world[(acutaly - 1) * width + actualx] != '#') && (steps[(acutaly - 1) * width + actualx] == 0))
                 {
-                    steps[actualpos - width] = totalSteps + 1;
+                    steps[(acutaly - 1) * width + actualx] = totalSteps + 1;
                     newSteps++;
                 }
-                if((world[actualpos + width] != '#') && (steps[actualpos + width] == 0))
+                if((world[(acutaly + 1) * width + actualx] != '#') && (steps[(acutaly + 1) * width + actualx] == 0))
                 {
-                    steps[actualpos + width] = totalSteps + 1;
+                    steps[(acutaly + 1) * width + actualx] = totalSteps + 1;
                     newSteps++;
                 }
-                if((world[actualpos + 1] != '#') && (steps[actualpos + 1] == 0))
+                if((world[acutaly * width + actualx + 1] != '#') && (steps[acutaly * width + actualx + 1] == 0))
                 {
-                    steps[actualpos + 1] = totalSteps + 1;
+                    steps[acutaly * width + actualx + 1] = totalSteps + 1;
                     newSteps++;
                 }
-                if((world[actualpos - 1] != '#') && (steps[actualpos - 1] == 0))
+                if((world[acutaly * width + actualx - 1] != '#') && (steps[acutaly * width + actualx - 1] == 0))
                 {
-                    steps[actualpos - 1] = totalSteps + 1;
+                    steps[acutaly * width + actualx - 1] = totalSteps + 1;
                     newSteps++;
                 }
             }
@@ -94,24 +96,35 @@ int move(char *world) {
             break;
         }
     }
+    //robot position in x and y coordinates
+    robot_index_y = robot_index / width;
+    robot_index_x = robot_index % width;
+
+    //Target position in x and y coordinates 
+    target_index_y = target_index / width;
+    target_index_x = target_index % width;
+
+    //Distance between robot and target
+    int xDistance = target_index_x - robot_index_x;
+    int yDistance = target_index_y - robot_index_y;
     
     //robot next to the target *** TARGET FOUND - SINGLE MOVE ***
-    if(world[robot_index - width] == 'T')
+    if(world[(robot_index_y - 1) * width + robot_index_x] == 'T')
         return North;
-    if(world[robot_index + width] == 'T')
+    if(world[(robot_index_y + 1) * width + robot_index_x] == 'T')
         return South;
-    if(world[robot_index - 1] == 'T')
+    if(world[robot_index_y * width + robot_index_x - 1] == 'T')
         return West;
-    if(world[robot_index + 1] == 'T')
+    if(world[robot_index_y * width + robot_index_x + 1] == 'T')
         return East;
   
     //analize surrounding
     int isFreeToMove[4];
     int upIsFree, downIsFree, leftIsFree, rightIsFree;
-    upIsFree = (world[robot_index - width] == '#' ? 0 : 1);
-    downIsFree = (world[robot_index + width] == '#' ? 0 : 1);
-    leftIsFree = (world[robot_index - 1] == '#' ? 0 : 1);
-    rightIsFree = (world[robot_index + 1] == '#' ? 0 : 1);
+    upIsFree = (world[(robot_index_y - 1) * width + robot_index_x] == '#' ? 0 : 1);
+    downIsFree = (world[(robot_index_y + 1) * width + robot_index_x] == '#' ? 0 : 1);
+    leftIsFree = (world[robot_index_y * width + robot_index_x - 1] == '#' ? 0 : 1);
+    rightIsFree = (world[robot_index_y * width + robot_index_x + 1] == '#' ? 0 : 1);
 
     int ifUp = 201;
     int ifDown = 201;
@@ -121,13 +134,13 @@ int move(char *world) {
     //IF UP IS FREE -------------------------------------------------------
 
     if(upIsFree == 1)
-        ifUp = minSteps(world, robot_index - width, width);
+        ifUp = minSteps(world, robot_index_x, robot_index_y - 1, width);
     if(downIsFree == 1)
-        ifDown = minSteps(world, robot_index + width, width);
+        ifDown = minSteps(world, robot_index_x, robot_index_y + 1, width);
     if(leftIsFree)
-        ifLeft = minSteps(world, robot_index - 1, width);
+        ifLeft = minSteps(world, robot_index_x - 1, robot_index_y, width);
     if(rightIsFree)
-        ifRight = minSteps(world, robot_index + 1, width);
+        ifRight = minSteps(world, robot_index_x + 1, robot_index_y, width);
       
     int bestRoute = 0;
     if((ifUp <= ifDown) && (ifUp <= ifLeft) && (ifUp <= ifRight))
@@ -144,12 +157,12 @@ int move(char *world) {
     //NORTH
     if(bestRoute == North)
     {
-        if ((world[robot_index - width] == '~') && (current_mode == 0))
+        if ((world[(robot_index_y - 1)*width + robot_index_x] == '~') && (current_mode == 0))
         {
             current_mode = 1;
             return Toggle;
         }
-        if ((world[robot_index - width] == 'O') && (current_mode == 1))
+        if ((world[(robot_index_y - 1)*width + robot_index_x] == 'O') && (current_mode == 1))
         {
             current_mode = 0;
             return Toggle;
@@ -158,12 +171,12 @@ int move(char *world) {
     //SOUTH
     if(bestRoute == South)
     {
-        if ((world[robot_index + width] == '~') && (current_mode == 0))
+        if ((world[(robot_index_y + 1)*width + robot_index_x] == '~') && (current_mode == 0))
         {
             current_mode = 1;
             return Toggle;
         }
-        if ((world[robot_index + width] == 'O') && (current_mode == 1))
+        if ((world[(robot_index_y + 1)*width + robot_index_x] == 'O') && (current_mode == 1))
         {
             current_mode = 0;
             return Toggle;
@@ -172,12 +185,12 @@ int move(char *world) {
     //WEST
     if(bestRoute == West)
     {
-        if ((world[robot_index - 1] == '~') && (current_mode == 0))
+        if ((world[robot_index_y*width + robot_index_x - 1] == '~') && (current_mode == 0))
         {
             current_mode = 1;
             return Toggle;
         }
-        if ((world[robot_index - 1] == 'O') && (current_mode == 1))
+        if ((world[robot_index_y*width + robot_index_x - 1] == 'O') && (current_mode == 1))
         {
             current_mode = 0;
             return Toggle;
@@ -186,12 +199,12 @@ int move(char *world) {
     //EAST
     if(bestRoute == East)
     {
-        if ((world[robot_index + 1] == '~') && (current_mode == 0))
+        if ((world[robot_index_y*width + robot_index_x + 1] == '~') && (current_mode == 0))
         {
             current_mode = 1;
             return Toggle;
         }
-        if ((world[robot_index + 1] == 'O') && (current_mode == 1))
+        if ((world[robot_index_y*width + robot_index_x + 1] == 'O') && (current_mode == 1))
         {
             current_mode = 0;
             return Toggle;

@@ -10,7 +10,8 @@
 #define Toggle 5
 
 // Function declaration
-int minSteps(char *world, int initial_position_x, int initial_position_y, int width);
+//int minSteps(char *world, int initial_position_x, int initial_position_y, int width);
+int minSteps(char *world, int initial_position, int width);
 int move(char *world);
 
 #endif // RESCUEBOT_H
