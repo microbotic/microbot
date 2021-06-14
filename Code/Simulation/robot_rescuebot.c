@@ -12,9 +12,7 @@ int minSteps(char *world, int initial_position, int width)
     int totalSteps = 1;     //counter for the steps to go to the target
     int steps[200];
     for (int i = 0; i < 200; i++)   //Clear the steps counter
-    {
         steps[i] = 0;
-    }
     steps[initial_position] = 1;  //mark the initial step as 1 (one steps total from the robot to the target)
     newSteps = 1;
     int targetFound = 0;
@@ -69,29 +67,23 @@ int move(char *world) {
     int bestRoute = 0;
 
     for (int i = 0; i < 200; ++i)
-    {
         if (world[i] == '\n')
         {
             width = i+1;
             break;
         }
-    }
     for (int i = 0; i < 200; ++i)
-    {
         if (world[i] == 'R') 
         {
             robot_index = i;
             break;
         }
-    }
     for(int i = 0; i < 200; ++i)
-    {
         if (world[i] == 'T') 
         {
             target_index = i;
             break;
         }
-    }
     
     //robot next to the target *** TARGET FOUND - SINGLE MOVE ***
     if(world[robot_index - width] == 'T')
