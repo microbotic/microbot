@@ -9,11 +9,9 @@ int current_mode = 0;
 int minSteps(char *world, int initial_position, int width)
 {
     int newSteps;
-    int newToggle = 0;
     int totalSteps = 1;     //counter for the steps to go to the target
     int steps[200];
-    //Clear the steps counter
-    for (int i = 0; i < 200; i++)
+    for (int i = 0; i < 200; i++)   //Clear the steps counter
     {
         steps[i] = 0;
     }
@@ -68,8 +66,8 @@ int minSteps(char *world, int initial_position, int width)
 
 int move(char *world) {
     int robot_index, target_index, width;
-    
-    //int nextMove = 1;
+    int bestRoute = 0;
+
     for (int i = 0; i < 200; ++i)
     {
         if (world[i] == '\n')
@@ -105,14 +103,13 @@ int move(char *world) {
     if(world[robot_index + 1] == 'T')
         return East;
   
-    //analize surrounding
+    //get min steps in every direction
    
     int ifUp = (world[robot_index - width] == '#' ? 500 : minSteps(world, robot_index - width, width));
     int ifDown = (world[robot_index + width] == '#' ? 500 : minSteps(world, robot_index + width, width));
     int ifLeft = (world[robot_index - 1] == '#' ? 500 : minSteps(world, robot_index - 1, width)); 
     int ifRight = (world[robot_index + 1] == '#' ? 500 : minSteps(world, robot_index + 1, width));
     
-    int bestRoute = 0;
     if((ifUp <= ifDown) && (ifUp <= ifLeft) && (ifUp <= ifRight))
         bestRoute = North;
     else if((ifDown <= ifLeft) && (ifDown <= ifRight))
@@ -123,41 +120,29 @@ int move(char *world) {
         bestRoute = East;
 
     //decide if robot has to toggle
-    //NORTH
     if(bestRoute == North)
-    {
         if (((world[robot_index - width] == '~') && (current_mode == 0)) || ((world[robot_index - width] == 'O') && (current_mode == 1)))
         {
             current_mode = (current_mode == 0 ? 1 : 0);
             return Toggle;
         }
-    }
-    //SOUTH
     if(bestRoute == South)
-    {
         if (((world[robot_index + width] == '~') && (current_mode == 0)) || ((world[robot_index + width] == 'O') && (current_mode == 1)))
         {
             current_mode = (current_mode == 0 ? 1 : 0);
             return Toggle; 
         }
-    }
-    //WEST
     if(bestRoute == West)
-    {
         if (((world[robot_index - 1] == '~') && (current_mode == 0)) || ((world[robot_index - 1] == 'O') && (current_mode == 1)))
         {
             current_mode = (current_mode == 0 ? 1 : 0);
             return Toggle;
         } 
-    }
-    //EAST
     if(bestRoute == East)
-    {
         if (((world[robot_index + 1] == '~') && (current_mode == 0)) || ((world[robot_index + 1] == 'O') && (current_mode == 1)))
         {
             current_mode = (current_mode == 0 ? 1 : 0);
             return Toggle;
         } 
-    }
     return bestRoute; // REPLACE THE RETURN VALUE WITH YOUR CALCULATED RETURN VALUE
 }

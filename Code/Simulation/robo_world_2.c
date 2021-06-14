@@ -224,11 +224,11 @@ int main() {
     //memcpy(world, world3, sizeof(world3));
     //memcpy(world, world3, sizeof(world3));
     //memcpy(world, world4, sizeof(world4));
-    //memcpy(world, world5, sizeof(world5));
+    memcpy(world, world5, sizeof(world5));
     //memcpy(world, world6, sizeof(world6)); //up 
     //memcpy(world, world7, sizeof(world7));//down 
     //memcpy(world, world8, sizeof(world8));//right 
-    memcpy(world, world9, sizeof(world9));//left 
+    //memcpy(world, world9, sizeof(world9));//left 
 
     // Initialize target and robot positions
     // Assumes only one target, one robot
