@@ -152,7 +152,7 @@ int move(char *world)
         int targetFound = 0;
         while ((newSteps != 0) && (targetFound == 0))
         {
-            newSteps = 0; //initialize new steps (if there are no new steps no makes sence to try again).
+            newSteps = 0; //initialize new steps (if there are no new steps no makes sence to try again)
             for (int i = 0; i < 200; i++)
             {
                 int actualx = 0;
@@ -334,5 +334,5 @@ int move(char *world)
     else
         bestRoute = East;
 
-    return bestRoute;
+    return bestRoute; // REPLACE THE RETURN VALUE WITH YOUR CALCULATED RETURN VALUE
 }
