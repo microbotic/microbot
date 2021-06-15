@@ -323,3 +323,15 @@ int move(char *world)
         }
         ifRight = totalSteps;
     }
+
+    int bestRoute = 0;
+    if ((ifUp <= ifDown) && (ifUp <= ifLeft) && (ifUp <= ifRight))
+        bestRoute = North;
+    else if ((ifDown <= ifLeft) && (ifDown <= ifRight))
+        bestRoute = South;
+    else if (ifLeft <= ifRight)
+        bestRoute = West;
+    else
+        bestRoute = East;
+
+    return bestRoute;
