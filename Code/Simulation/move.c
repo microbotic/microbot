@@ -335,3 +335,4 @@ int move(char *world)
         bestRoute = East;
 
     return bestRoute;
+}
