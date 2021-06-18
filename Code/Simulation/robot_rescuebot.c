@@ -4,100 +4,78 @@
 // ALLOWED RETURN VALUES:
 // 1: North, 2: East, 3: South, 4: West, 5: Toggle watern/land mode
 
-int current_mode = 0; 
+int current_mode = 0;
+int intMap[200];
+int init = 0;
 
-int minSteps(char *world, int initial_position, int width)
+int minSteps(char *world, int initial_position, int width, int target_index)
 {
-    int newSteps;
-    int totalSteps = 1;     //counter for the steps to go to the target
+    int totalEnergy = 1;     //counter for the steps to go to the target
     int steps[200];
     for (int i = 0; i < 200; i++)   //Clear the steps counter
         steps[i] = 0;
-    steps[initial_position] = 1;  //mark the initial step as 1 (one steps total from the robot to the target)
-    newSteps = 1;
+    steps[initial_position] = ((world[initial_position] == '~' && current_mode == 0) || 
+        (world[initial_position] == 'O' && current_mode == 1) || (intMap[initial_position] == 1) ? 4 : 1);
     int targetFound = 0;
-    while((newSteps != 0) && (targetFound == 0))
+    while(targetFound == 0)
     {
-        newSteps = 0;   //initialize new steps (if there are no new steps no makes sence to try again)
+        if(steps[target_index] != 0)
+            return steps[target_index];
         for(int i = 0; i < 200; i++)
         {
-            int actualpos = 0;
-            if(steps[i] == totalSteps)
+            if(steps[i] == totalEnergy)
             {
-                actualpos = i;
-                if((world[actualpos - width] == 'T') || (world[actualpos + width] == 'T') ||
-                    (world[actualpos + 1] == 'T') || (world[actualpos - 1] == 'T'))
-                {
-                    targetFound = 1;
-                    break;
-                }
-                //count steps to go to different positions
-                if((world[actualpos - width] != '#') && (steps[actualpos - width] == 0))
-                {
-                    steps[actualpos - width] = totalSteps + 1;
-                    newSteps++;
-                }
-                if((world[actualpos + width] != '#') && (steps[actualpos + width] == 0))
-                {
-                    steps[actualpos + width] = totalSteps + 1;
-                    newSteps++;
-                }
-                if((world[actualpos + 1] != '#') && (steps[actualpos + 1] == 0))
-                {
-                    steps[actualpos + 1] = totalSteps + 1;
-                    newSteps++;
-                }
-                if((world[actualpos - 1] != '#') && (steps[actualpos - 1] == 0))
-                {
-                    steps[actualpos - 1] = totalSteps + 1;
-                    newSteps++;
-                }
+                if((world[i - width] != '#') && (world[i - width] != '*') && (steps[i - width] == 0))
+                    steps[i - width] = ((((world[i - width] == '~' && current_mode == 0) || (world[i - width] == 'O' && current_mode == 1)) ||
+                        intMap[i - width] == 1) ? totalEnergy + 4 : totalEnergy + 1);
+                if((world[i + width] != '#') && (world[i + width] != '*') && (steps[i + width] == 0))
+                    steps[i + width] = ((((world[i + width] == '~' && current_mode == 0) || (world[i + width] == 'O' && current_mode == 1)) ||
+                        intMap[i + width] == 1) ? totalEnergy + 4 : totalEnergy + 1);    
+                if((world[i + 1] != '#') && (world[i + 1] != '*') && (steps[i + 1] == 0))
+                    steps[i + 1] = ((((world[i + 1] == '~' && current_mode == 0) || (world[i + 1] == 'O' && current_mode == 1)) ||
+                        intMap[i + 1] == 1) ? totalEnergy + 4 : totalEnergy + 1);
+                if((world[i - 1] != '#') && (world[i - 1] != '*') && (steps[i - 1] == 0))
+                    steps[i - 1] = ((((world[i - 1] == '~' && current_mode == 0) || (world[i - 1] == 'O' && current_mode == 1)) ||
+                        intMap[i - 1] == 1) ? totalEnergy + 4 : totalEnergy + 1);
             }
         }
-        if (newSteps != 0)
-        {
-            totalSteps++;
-        }
+        totalEnergy ++;
     }
-    return totalSteps;
+    return totalEnergy;
+}
+
+int get_pos(char *world, char toAquire)
+{
+    for (int i = 0; i < 200; ++i)
+        if (world[i] == toAquire)
+            return i;
+    return -1;
 }
 
 int move(char *world) {
-    int robot_index, target_index, width;
+    int robot_index, width, target_index = -1;
     int bestRoute = 0;
-    for (int i = 0; i < 200; ++i)
-        if (world[i] == '\n')
-        {
-            width = i+1;
-            break;
-        }
-    for (int i = 0; i < 200; ++i)
-        if (world[i] == 'R') 
-        {
-            robot_index = i;
-            break;
-        }
-    for(int i = 0; i < 200; ++i)
-        if (world[i] == 'T') 
-        {
-            target_index = i;
-            break;
-        }
-    //robot next to the target *** TARGET FOUND - SINGLE MOVE ***
-    if(world[robot_index - width] == 'T')
-        return North;
-    if(world[robot_index + width] == 'T')
-        return South;
-    if(world[robot_index - 1] == 'T')
-        return West;
-    if(world[robot_index + 1] == 'T')
-        return East;
-  
+    width = get_pos(world, '\n') + 1;
+    robot_index = get_pos(world, 'R');
+    target_index = get_pos(world, 'T');
+    if(target_index == -1)
+    {
+        target_index = get_pos(world, 'X');
+        init = 0;
+    }
+    if(init == 0)
+    {
+        for (int i = 0; i < 200; i++)
+            intMap[i] = 0;
+        init = 1;
+    }
+    intMap[robot_index] = 1;
+   
     //get min steps in every direction
-    int ifUp = (world[robot_index - width] == '#' ? 500 : minSteps(world, robot_index - width, width));
-    int ifDown = (world[robot_index + width] == '#' ? 500 : minSteps(world, robot_index + width, width));
-    int ifLeft = (world[robot_index - 1] == '#' ? 500 : minSteps(world, robot_index - 1, width)); 
-    int ifRight = (world[robot_index + 1] == '#' ? 500 : minSteps(world, robot_index + 1, width));
+    int ifUp = ((world[robot_index - width] == '#' || world[robot_index - width] == '*') ? 1000 : minSteps(world, robot_index - width, width, target_index));
+    int ifDown = ((world[robot_index + width] == '#' || world[robot_index + width] == '*') ? 1000 : minSteps(world, robot_index + width, width, target_index));
+    int ifLeft = ((world[robot_index - 1] == '#' || world[robot_index - 1] == '*') ? 1000 : minSteps(world, robot_index - 1, width, target_index)); 
+    int ifRight = ((world[robot_index + 1] == '#' || world[robot_index + 1] == '*') ? 1000 : minSteps(world, robot_index + 1, width, target_index));
     
     if((ifUp <= ifDown) && (ifUp <= ifLeft) && (ifUp <= ifRight))
         bestRoute = North;
