@@ -36,7 +36,28 @@ int energy = 0;
 char coming_from = 'X'; // We start on the space we need to return to
 
 // THIS IS THE FUNCTION YOU IMPLEMENT
-int move(char *world);
+int move(char *world, int map_id);
+
+void reset_world() {
+    driving_mode = 0;
+    rescued = 0;
+    energy = 0;
+    coming_from = 'X'; // We start on the space we need to return to
+}
+
+/*
+void print_world(char *world, int size) {
+    for(int i = 0; i< size; i++) {
+        if(world[i] == 'O') { printf("%c", ' '); }
+        else { printf("%c", world[i]); }
+    }
+    printf("\n");
+}
+*/
+
+void print_world(char *world) {
+    printf("%s", world);
+}
 
 // Return target index
 int update_world(int movement, char *world, int robot_index, int width) {
@@ -73,8 +94,10 @@ int update_world(int movement, char *world, int robot_index, int width) {
     // ACTION
     if(world[target_index] == 'O') {
         if(driving_mode != 0) {
+            print_world(world);
             printf("FAILURE, tried to drive on land in water mode!");
-            exit(1);
+            return -2;
+            //exit(1);
         }
         else {
             world[target_index] = 'R';
@@ -89,22 +112,23 @@ int update_world(int movement, char *world, int robot_index, int width) {
     }
     // Walls
     else if(world[target_index] == '#') {
-        printf("%s", world);
-        printf("%c", '\n');
-        printf("FAILURE, crashed into a wall!");
-        exit(1);
+        print_world(world);
+        printf("FAILURE, crashed into a wall! \n");
+        return -2;
+        // exit(1);
     }
     // Obstacles (can be destroyed later)
     else if(world[target_index] == '*') {
-        printf("%s", world);
-        printf("%c", '\n');
-        printf("FAILURE, crashed into an obstacle!");
-        exit(1);
+        print_world(world);
+        printf("FAILURE, crashed into an obstacle! \n");
+        return -2;
+        // exit(1);
     }
     else if(world[target_index] == '~') {
         if(driving_mode != 1) {
-            printf("FAILURE, entered water in land mode!");
-            exit(1);
+            printf("FAILURE, entered water in land mode! \n");
+            return -2;
+            // exit(1);
         }
         else {
             world[target_index] = 'R';
@@ -114,7 +138,7 @@ int update_world(int movement, char *world, int robot_index, int width) {
         }
         
     }
-     else if(world[target_index] == 'T') {
+    else if(world[target_index] == 'T') {
         world[target_index] = 'R';
         world[robot_index] = coming_from;
         rescued++;
@@ -125,15 +149,17 @@ int update_world(int movement, char *world, int robot_index, int width) {
         world[target_index] = 'R';
         world[robot_index] = coming_from;
         if(rescued > 0) {
-            printf("%s", world);
-            printf("%c", '\n');
-            printf("SUCCESS, target returned home!");
-            exit(0);
+            print_world(world);
+            printf("SUCCESS, target returned home! \n");
+            return -1;
+            // exit(0);
         } else {
             coming_from = 'X';
             return target_index;
         }
-
+    } else {
+        // Catchall fail
+        return -3;
     }
 }
 
@@ -233,64 +259,95 @@ int main() {
         '#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','\n'
     };
 
-    char world9[200] = {
-        '#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','\n',
-        '#','O','O','O','T','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','~','~','~','~','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','~','~','~','~','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','O','O','O','R','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','\n'
-    };
-
-    char world10[200] = {
-        '#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','\n',
-        '#','T','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','~','~','~','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','~','~','~','~','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','R','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','O','#','\n',
-        '#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','\n'
-    };
-
     // Set the world to use
+    char *maps[] = {world1, world2, world3, world4, world5, world6, world7, world8};
+    //char *maps[] = {world1};
+    unsigned long number_of_maps = sizeof(maps)/sizeof(*maps);
     char world[200];
-    memcpy(world, world7, sizeof(world7));
+    int energy_scores[number_of_maps];
 
-    // Initialize target and robot positions
-    // Assumes only one target, one robot
-    unsigned int elements = sizeof(world)/sizeof(world[0]);
+    // TODO: Loop over all maps here
+    for(int i = 0; i < number_of_maps; i++) {
+        memcpy(world, maps[i], sizeof(world));
+        // Initialize target and robot positions
+        // Assumes only one target, one robot
+        unsigned int elements = sizeof(world)/sizeof(world[0]);
+        // Initialize the index of the robot and the target.
 
-    // Initialize the index of the robot and the target.
-    // Assumes exactly one robot and one target
-    int robot_index;
-    int target_index;
+        // Assumes exactly one robot and one target
+        int robot_index;
+        int target_index;
 
-    for(int i = 0; i < elements; i++) {
-    if (world[i] == 'R') { robot_index = i; }
-    if (world[i] == 'T') { target_index = i; }
+        for(int i = 0; i < elements; i++) {
+            if (world[i] == 'R') { robot_index = i; }
+            if (world[i] == 'T') { target_index = i; }
+        }
+
+
+
+        // Print the initial world
+        printf("Starting position: \n");
+        print_world(world);
+        // Debug output
+        // printf("Robot index: %i / target index: %i %c", robot_index, target_index, '\n');
+
+        while (step <= MAX_STEPS)
+        {
+            printf("After step number %i: \n", step);
+
+            movement = move(world, i);
+            robot_index = update_world(movement, world, robot_index, width);
+            if (robot_index >= 0)
+            {
+                print_world(world);
+                step = step + 1;
+            }
+            else if (robot_index == -1)
+            {
+                // Reset
+                step = 1;
+                energy_scores[i] = energy;
+                reset_world();
+                break; // SUCCESS
+            }
+            else if (robot_index == -2)
+            {
+                // Reset
+                step = 1;
+                energy_scores[i] = -1;
+                reset_world();
+                break; // FAILURE
+            }
+        }
+        if (step >= MAX_STEPS)
+        {
+            printf("FAILURE, maximum number of steps exceeded.");
+        }
     }
-
-    // Print the initial world
-    printf("Starting position: %c", '\n');
-    // Debug output
-    // printf("Robot index: %i / target index: %i %c", robot_index, target_index, '\n');
-    printf("%s", world);
-    printf("%c", '\n');
     
-    while(step <= MAX_STEPS) {
-        printf("After step number %i: %c", step, '\n');
-
-        movement = move(world);
-        robot_index = update_world(movement, world, robot_index, width);
-        printf("%s", world);
-        printf("%c", '\n');
-        step = step+1;
+    // Print an overview
+    printf("\n*** SCORE *** \n");
+    int energy_sum = 0;
+    int fail_counter = 0;
+    int total_scores = sizeof(energy_scores)/sizeof(energy_scores[0]);
+    for(int i = 0; i < total_scores; i++) {
+        if(energy_scores[i] > 0) {
+            printf("Map %d: %d \n", i, energy_scores[i]);
+            energy_sum += energy_scores[i];
+        }
+        else {
+            printf("Map %d: FAIL \n", i);
+            fail_counter++;
+        }
     }
-    if(step >= MAX_STEPS) {
-        printf("FAILURE, maximum number of steps exceeded.");
+    int finished_runs = total_scores-fail_counter;
+    if(finished_runs > 0) {
+        printf("Total: %d \n", energy_sum);
+        printf("Average: %d ", energy_sum/(total_scores-fail_counter));
+    } else {
+        printf("Total: FAILED ALL \n");
+        printf("Average: FAILED ALL ");
     }
-    
+    if(fail_counter > 0) { printf("/ %d failures \n", fail_counter); }
+    else {printf("\n"); }
 }
