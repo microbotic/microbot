@@ -9,7 +9,7 @@ int current_mode = 0;
 int minSteps(char *world, int initial_position_x, int initial_position_y, int width)
 {
     int newSteps;
-    int newToggle = 0;
+    //int newToggle = 0;
     int totalSteps = 1;     //counter for the steps to go to the target
     int steps[200];
     //Clear the steps counter
